@@ -1,0 +1,8 @@
+syntax = "proto3";
+option java_package = "demo.proto";
+option java_outer_classname = "OuterClass";
+
+message ProtoBufBody {
+    string name = 1;
+    string password = 2;
+}
