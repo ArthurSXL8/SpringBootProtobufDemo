@@ -11,6 +11,8 @@ import java.util.concurrent.TimeUnit;
 
 public class HttpUtil {
   public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+  public static final MediaType PROTOBUF = MediaType.parse("application/x-protobuf");
+
   private static final long CONNECT_TIMEOUT = 60L;
   private static final long READ_TIMEOUT = 60L;
 
@@ -19,9 +21,10 @@ public class HttpUtil {
           .readTimeout(READ_TIMEOUT, TimeUnit.SECONDS).build();
 
   public static String post(String url, String requestBody) {
-
-    Request request =
-        new Request.Builder().url(url).post(RequestBody.create(JSON, requestBody)).build();
+    Request request = new Request.Builder()
+        //.addHeader("Content-Encoding", "snappy")
+        .header("X-Prometheus-Remote-Write-Version", "0.1.0").url(url)
+        .post(RequestBody.create(PROTOBUF, requestBody)).build();
     Response response;
     try {
       response = okHttpClient.newCall(request).execute();
